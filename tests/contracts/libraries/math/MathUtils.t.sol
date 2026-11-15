@@ -105,6 +105,7 @@ contract MathUtilsTest is Base {
     MathUtils.add(0, type(int256).min);
 
     assertEq(MathUtils.add(uint256(INT256_MAX), type(int256).min + 1), 0);
+    assertEq(MathUtils.add(uint256(type(int256).max) + 1, type(int256).min), 0);
 
     vm.expectRevert(stdError.arithmeticError);
     MathUtils.add(UINT256_MAX, 1);

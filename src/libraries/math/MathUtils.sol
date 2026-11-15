@@ -45,10 +45,16 @@ library MathUtils {
   }
 
   /// @notice Returns the sum of an unsigned and signed integer.
-  /// @dev Reverts on underflow.
-  function add(uint256 a, int256 b) internal pure returns (uint256) {
-    if (b >= 0) return a + uint256(b);
-    return a - uint256(-b);
+  /// @dev Reverts on underflow or overflow.
+  function add(uint256 a, int256 b) internal pure returns (uint256 c) {
+    assembly ('memory-safe') {
+      c := add(a, b)
+      if xor(lt(c, a), slt(b, 0)) {
+        mstore(0x00, 0x4e487b71)
+        mstore(0x20, 0x11)
+        revert(0x1c, 0x24)
+      }
+    }
   }
 
   /// @notice Returns the sum of two unsigned integers.
